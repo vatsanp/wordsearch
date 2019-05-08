@@ -18,9 +18,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B56-hC-BJl">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Pa-fk-S4G" customClass="DrawView" customModule="WordSearch" customModuleProvider="target">
                                 <rect key="frame" x="32" y="273" width="350" height="350"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="350" id="9TJ-cL-Ln0"/>
+                                    <constraint firstAttribute="width" constant="350" id="ers-A8-xL9"/>
+                                </constraints>
+                            </view>
+                            <collectionView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B56-hC-BJl">
+                                <rect key="frame" x="32" y="273" width="350" height="350"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="350" id="l2Q-g1-4B1"/>
                                     <constraint firstAttribute="width" constant="350" id="uBO-oG-Qie"/>
@@ -64,6 +72,8 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="3Pa-fk-S4G" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="0Ks-S6-H6z"/>
+                            <constraint firstItem="3Pa-fk-S4G" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="0S4-7B-aPT"/>
                             <constraint firstItem="B56-hC-BJl" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="SfE-kg-MDb"/>
                             <constraint firstItem="B56-hC-BJl" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zPd-8z-yLS"/>
                         </constraints>

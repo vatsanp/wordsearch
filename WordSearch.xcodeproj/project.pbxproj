@@ -13,6 +13,7 @@
 		4A24A17F228281E300F868FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A24A17E228281E300F868FE /* Assets.xcassets */; };
 		4A24A182228281E300F868FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A24A180228281E300F868FE /* LaunchScreen.storyboard */; };
 		4A24A18A2282822300F868FE /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A24A1892282822300F868FE /* CollectionViewCell.swift */; };
+		4A3044E62282874D001C2DB0 /* DrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3044E52282874D001C2DB0 /* DrawView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		4A24A181228281E300F868FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A24A183228281E300F868FE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A24A1892282822300F868FE /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		4A3044E52282874D001C2DB0 /* DrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +60,9 @@
 			children = (
 				4A24A177228281E300F868FE /* AppDelegate.swift */,
 				4A24A179228281E300F868FE /* ViewController.swift */,
-				4A24A17B228281E300F868FE /* Main.storyboard */,
+				4A3044E52282874D001C2DB0 /* DrawView.swift */,
 				4A24A1892282822300F868FE /* CollectionViewCell.swift */,
+				4A24A17B228281E300F868FE /* Main.storyboard */,
 				4A24A17E228281E300F868FE /* Assets.xcassets */,
 				4A24A180228281E300F868FE /* LaunchScreen.storyboard */,
 				4A24A183228281E300F868FE /* Info.plist */,
@@ -140,6 +143,7 @@
 			files = (
 				4A24A17A228281E300F868FE /* ViewController.swift in Sources */,
 				4A24A178228281E300F868FE /* AppDelegate.swift in Sources */,
+				4A3044E62282874D001C2DB0 /* DrawView.swift in Sources */,
 				4A24A18A2282822300F868FE /* CollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
