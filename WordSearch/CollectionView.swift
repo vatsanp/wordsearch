@@ -20,33 +20,33 @@ class CollectionView: UICollectionView {
 		return nil
 	}
 	
-	func getDirection(startingCell: CollectionViewCell, endingCell: CollectionViewCell) -> [Int]! {
+	func getDirection(startingCell: CollectionViewCell, endingCell: CollectionViewCell) -> CGPoint! {
 		if (startingCell == endingCell) {
-			return [0, 0]
+			return CGPoint(x: 0, y: 0)
 		}
 		else if (startingCell.x == endingCell.x) {
 			if (startingCell.y < endingCell.y) {
-				return [0, 1]
+				return CGPoint(x: 0, y: 1)
 			}
-			return [0, -1]
+			return CGPoint(x: 0, y: -1)
 		}
 		else if (startingCell.y == endingCell.y) {
 			if (startingCell.x < endingCell.x) {
-				return [1, 0]
+				return CGPoint(x: 1, y: 0)
 			}
-			return [-1, 0]
+			return CGPoint(x: -1, y: 0)
 		}
 		else if (abs(startingCell.x - endingCell.x) == abs(startingCell.y - endingCell.y)) {
 			if (startingCell.x < endingCell.x && startingCell.y < endingCell.y) {
-				return [1, 1]
+				return CGPoint(x: 1, y: 1)
 			}
 			else if (startingCell.x < endingCell.x && startingCell.y > endingCell.y) {
-				return [1, -1]
+				return CGPoint(x: 1, y: -1)
 			}
 			else if (startingCell.x > endingCell.x && startingCell.y > endingCell.y) {
-				return [-1, -1]
+				return CGPoint(x: -1, y: -1)
 			}
-			return [-1, 1]
+			return CGPoint(x: -1, y: 1)
 		}
 		return nil
 	}

@@ -17,11 +17,16 @@ struct Bounds {
 	var yMax: Int = 10
 }
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+protocol WordCheckProtocol {
+	func checkWord(startingCell: CollectionViewCell, endingCell: CollectionViewCell, direction: CGPoint)
+}
+
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, WordCheckProtocol {
 	
 	var wordBank: [String] = ["ObjectiveC", "Variable", "Mobile", "Kotlin", "Swift", "Java"]
 	var directions = [[1,0]: 0, [1,1]: 0, [0,1]: 0, [-1,1]: 0, [-1,0]: 0, [-1,-1]: 0, [0,-1]: 0, [1,-1]: 0]
 	var grid: [[Character]] = []
+	var wordsFound = 0
 	
 	@IBOutlet var gridView: CollectionView!
 	@IBOutlet var drawView: DrawView!
@@ -52,6 +57,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 		for row in grid {
 			print(String(row))
 		}
+		
+		self.drawView.delegate = self
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -143,6 +150,35 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 					grid[i][j] = randChar
 				}
 			}
+		}
+	}
+	
+	func checkWord(startingCell: CollectionViewCell, endingCell: CollectionViewCell, direction: CGPoint) {
+		var x = startingCell.x!
+		var y = startingCell.y!
+		
+		var currentLetter = grid[x][y]
+		var word = ""
+		
+		word.append(currentLetter)
+		if direction != CGPoint(x: 0, y: 0) {
+			while (x != endingCell.x || y != endingCell.y) {
+				x += Int(direction.x)
+				y += Int(direction.y)
+				currentLetter = grid[x][y]
+				word.append(currentLetter)
+			}
+		}
+		print(word)
+		
+		if wordBank.contains(word) || wordBank.contains(String(word.reversed())){
+			drawView.finishedLines.append(drawView.currentLine!)
+			print("Correct")
+			wordsFound += 1
+		}
+		else {
+			drawView.currentLine = nil
+			print("Wrong")
 		}
 	}
 }

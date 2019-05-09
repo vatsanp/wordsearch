@@ -16,12 +16,14 @@ struct Line {
 }
 
 class DrawView: UIView {
+
+	var delegate: WordCheckProtocol?
 	
 	var gridView: CollectionView!
 	
 	var currentLine: Line?
 	var finishedLines = [Line]();
-	var currentDirection: [Int]!
+	var currentDirection: CGPoint!
 	
 	func strokeLine(line: Line){
 		//Use BezierPath to draw lines
@@ -100,7 +102,9 @@ class DrawView: UIView {
 				currentDirection = direction
 			}
 		}
-		finishedLines.append(currentLine!)
+		let start = gridView.getCellAtPoint(point: currentLine!.begin)!
+		let end = gridView.getCellAtPoint(point: currentLine!.end)!
+		self.delegate?.checkWord(startingCell: start, endingCell: end, direction: currentDirection)
 		setNeedsDisplay(); //this view needs to be updated
 	}
 	
