@@ -23,10 +23,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 	var directions = [[1,0]: 0, [1,1]: 0, [0,1]: 0, [-1,1]: 0, [-1,0]: 0, [-1,-1]: 0, [0,-1]: 0, [1,-1]: 0]
 	var grid: [[Character]] = []
 	
-	@IBOutlet var gridView: UICollectionView!
+	@IBOutlet var gridView: CollectionView!
+	@IBOutlet var drawView: DrawView!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		drawView.gridView = gridView
 		
 		grid = [[Character]](repeating: [Character](repeating: "-", count: NUM_COLS), count: NUM_ROWS)
 		
@@ -58,7 +61,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GridCell", for: indexPath) as! CollectionViewCell
 		
-		cell.label.text = String(grid[indexPath.item/10][indexPath.item%10])
+		cell.x = indexPath.item/10
+		cell.y = indexPath.item%10
+		cell.label.text = String(grid[cell.x][cell.y])
 		
 		return cell
 	}

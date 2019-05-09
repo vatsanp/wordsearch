@@ -26,7 +26,7 @@
                                     <constraint firstAttribute="width" constant="350" id="ers-A8-xL9"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B56-hC-BJl">
+                            <collectionView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B56-hC-BJl" customClass="CollectionView" customModule="WordSearch" customModuleProvider="target">
                                 <rect key="frame" x="32" y="273" width="350" height="350"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -80,6 +80,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="drawView" destination="3Pa-fk-S4G" id="ff9-lQ-52C"/>
                         <outlet property="gridView" destination="B56-hC-BJl" id="ZMd-r7-8e5"/>
                     </connections>
                 </viewController>

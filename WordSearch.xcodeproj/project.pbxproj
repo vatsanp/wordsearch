@@ -14,6 +14,7 @@
 		4A24A182228281E300F868FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A24A180228281E300F868FE /* LaunchScreen.storyboard */; };
 		4A24A18A2282822300F868FE /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A24A1892282822300F868FE /* CollectionViewCell.swift */; };
 		4A3044E62282874D001C2DB0 /* DrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3044E52282874D001C2DB0 /* DrawView.swift */; };
+		4A3044EC2283B26C001C2DB0 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3044EB2283B26C001C2DB0 /* CollectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		4A24A183228281E300F868FE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A24A1892282822300F868FE /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		4A3044E52282874D001C2DB0 /* DrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawView.swift; sourceTree = "<group>"; };
+		4A3044EB2283B26C001C2DB0 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			children = (
 				4A24A177228281E300F868FE /* AppDelegate.swift */,
 				4A24A179228281E300F868FE /* ViewController.swift */,
+				4A3044EB2283B26C001C2DB0 /* CollectionView.swift */,
 				4A3044E52282874D001C2DB0 /* DrawView.swift */,
 				4A24A1892282822300F868FE /* CollectionViewCell.swift */,
 				4A24A17B228281E300F868FE /* Main.storyboard */,
@@ -142,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A24A17A228281E300F868FE /* ViewController.swift in Sources */,
+				4A3044EC2283B26C001C2DB0 /* CollectionView.swift in Sources */,
 				4A24A178228281E300F868FE /* AppDelegate.swift in Sources */,
 				4A3044E62282874D001C2DB0 /* DrawView.swift in Sources */,
 				4A24A18A2282822300F868FE /* CollectionViewCell.swift in Sources */,

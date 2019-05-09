@@ -10,5 +10,8 @@ import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
 	
+	var x: Int!
+	var y: Int!
+	
 	@IBOutlet var label: UILabel!
 }

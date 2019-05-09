@@ -16,10 +16,12 @@ struct Line {
 }
 
 class DrawView: UIView {
-
+	
+	var gridView: CollectionView!
+	
 	var currentLine: Line?
 	var finishedLines = [Line]();
-	var currentDirection: CGPoint!
+	var currentDirection: [Int]!
 	
 	func strokeLine(line: Line){
 		//Use BezierPath to draw lines
@@ -51,7 +53,11 @@ class DrawView: UIView {
 		let location = touch.location(in: self); //get location in view co-ordinate
 		print(location)
 		
-		currentLine = Line(begin: location, end: location);
+		let cell = gridView.getCellAtPoint(point: location)
+		let frame = gridView.convert(cell?.frame ?? gridView.getCellAtPoint(point: CGPoint(x: location.x-5, y: location.y-5)).frame, to: gridView)
+		let point = CGPoint(x: frame.midX, y: frame.midY)
+		
+		currentLine = Line(begin: point, end: point);
 		setNeedsDisplay(); //this view needs to be updated
 	}
 	
@@ -60,8 +66,19 @@ class DrawView: UIView {
 		let touch = touches.first!; //get first touch event and unwrap optional
 		let location = touch.location(in: self); //get location in view co-ordinate
 		
-		
-		currentLine?.end = location
+		let startingCell = gridView.getCellAtPoint(point: currentLine!.begin)
+		let endingCell = gridView.getCellAtPoint(point: location)
+		if (endingCell != nil ) {
+			let direction = gridView.getDirection(startingCell: startingCell!, endingCell: endingCell!)
+			
+			if (direction != nil) {
+				let frame = gridView.convert(endingCell!.frame, to: gridView)
+				let point = CGPoint(x: frame.midX, y: frame.midY)
+				
+				currentLine?.end = point
+				currentDirection = direction
+			}
+		}
 		setNeedsDisplay(); //this view needs to be updated
 	}
 	
@@ -70,7 +87,19 @@ class DrawView: UIView {
 		let touch = touches.first!; //get first touch event and unwrap optional
 		let location = touch.location(in: self); //get location in view co-ordinate
 		
-		currentLine?.end = location
+		let startingCell = gridView.getCellAtPoint(point: currentLine!.begin)
+		let endingCell = gridView.getCellAtPoint(point: location)
+		if (endingCell != nil) {
+			let direction = gridView.getDirection(startingCell: startingCell!, endingCell: endingCell!)
+			
+			if (direction != nil) {
+				let frame = gridView.convert(endingCell!.frame, to: gridView)
+				let point = CGPoint(x: frame.midX, y: frame.midY)
+				
+				currentLine?.end = point
+				currentDirection = direction
+			}
+		}
 		finishedLines.append(currentLine!)
 		setNeedsDisplay(); //this view needs to be updated
 	}
