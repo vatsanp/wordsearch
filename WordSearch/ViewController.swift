@@ -17,6 +17,16 @@ struct Bounds {
 	var yMax: Int = 10
 }
 
+struct Direction: Hashable {
+	let x: Int
+	let y: Int
+	
+	init(_ xParam: Int, _ yParam: Int) {
+		x = xParam
+		y = yParam
+	}
+}
+
 protocol WordCheckProtocol {
 	func checkWord(startingCell: CollectionViewCell, endingCell: CollectionViewCell, direction: CGPoint)
 }
@@ -24,7 +34,14 @@ protocol WordCheckProtocol {
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, WordCheckProtocol {
 	
 	var wordBank: [String] = ["ObjectiveC", "Variable", "Mobile", "Kotlin", "Swift", "Java"]
-	var directions = [[1,0]: 0, [1,1]: 0, [0,1]: 0, [-1,1]: 0, [-1,0]: 0, [-1,-1]: 0, [0,-1]: 0, [1,-1]: 0]
+	var directions = [	Direction(1,0): 0,
+						  Direction(1,1): 0,
+						  Direction(0,1): 0,
+						  Direction(-1,1): 0,
+						  Direction(-1,0): 0,
+						  Direction(-1,-1): 0,
+						  Direction(0,-1): 0,
+						  Direction(1,-1): 0]
 	var grid: [[Character]] = []
 	var wordsFound = 0
 	
@@ -33,8 +50,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		drawView.gridView = gridView
 		
 		grid = [[Character]](repeating: [Character](repeating: "-", count: NUM_COLS), count: NUM_ROWS)
 		
@@ -58,7 +73,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 			print(String(row))
 		}
 		
-		self.drawView.delegate = self
+		self.drawView.delegate1 = self
+		self.drawView.delegate2 = gridView
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -76,7 +92,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 	}
 	
 	func placeWord(word: String, grid: inout [[Character]]) {
-		var direction: [Int]
+		var direction: Direction
 		repeat {
 			direction = directions.randomElement()!.key
 		} while (directions[direction]! >= 2)
@@ -95,7 +111,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 				if (grid[x][y] != letter && grid[x][y] != "-") {
 					success = false
 				}
-				x += direction[0]; y += direction[1]
+				x += direction.x; y += direction.y
 			}
 			if (success == false) { continue }
 			
@@ -104,7 +120,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 			
 			for letter in word {
 				grid[x][y] = letter
-				x += direction[0]; y += direction[1]
+				x += direction.x; y += direction.y
 			}
 			
 			let value = directions[direction]!
@@ -115,10 +131,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 		print(directions)
 	}
 	
-	func getBounds(direction: [Int], word: String) -> Bounds {
+	func getBounds(direction: Direction, word: String) -> Bounds {
 		var bounds = Bounds()
 		
-		switch direction[0] {
+		switch direction.x {
 		case 0:
 			bounds.xMin = 0; bounds.xMax = NUM_ROWS
 		case 1:
@@ -128,7 +144,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 		default:
 			bounds.xMin = 0; bounds.xMax = NUM_ROWS
 		}
-		switch direction[1] {
+		switch direction.y {
 		case 0:
 			bounds.yMin = 0; bounds.yMax = NUM_COLS
 		case 1:

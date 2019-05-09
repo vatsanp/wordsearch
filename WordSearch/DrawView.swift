@@ -17,9 +17,8 @@ struct Line {
 
 class DrawView: UIView {
 
-	var delegate: WordCheckProtocol?
-	
-	var gridView: CollectionView!
+	var delegate1: WordCheckProtocol?
+	var delegate2: GetDetailsProtocol?
 	
 	var currentLine: Line?
 	var finishedLines = [Line]();
@@ -55,9 +54,10 @@ class DrawView: UIView {
 		let location = touch.location(in: self); //get location in view co-ordinate
 		print(location)
 		
-		let cell = gridView.getCellAtPoint(point: location)
-		let frame = gridView.convert(cell?.frame ?? gridView.getCellAtPoint(point: CGPoint(x: location.x-5, y: location.y-5)).frame, to: gridView)
-		let point = CGPoint(x: frame.midX, y: frame.midY)
+		let cell = self.delegate2?.getCellAtPoint(point: location)
+		let backUpCell = self.delegate2?.getCellAtPoint(point: CGPoint(x: location.x-5, y: location.y-5))
+		let frame = self.delegate2?.getView().convert(cell?.frame ?? backUpCell!.frame, to: self.delegate2?.getView())
+		let point = CGPoint(x: frame!.midX, y: frame!.midY)
 		
 		currentLine = Line(begin: point, end: point);
 		setNeedsDisplay(); //this view needs to be updated
@@ -68,14 +68,14 @@ class DrawView: UIView {
 		let touch = touches.first!; //get first touch event and unwrap optional
 		let location = touch.location(in: self); //get location in view co-ordinate
 		
-		let startingCell = gridView.getCellAtPoint(point: currentLine!.begin)
-		let endingCell = gridView.getCellAtPoint(point: location)
+		let startingCell = self.delegate2?.getCellAtPoint(point: currentLine!.begin)
+		let endingCell = self.delegate2?.getCellAtPoint(point: location)
 		if (endingCell != nil ) {
-			let direction = gridView.getDirection(startingCell: startingCell!, endingCell: endingCell!)
+			let direction = self.delegate2?.getDirection(startingCell: startingCell!, endingCell: endingCell!)
 			
 			if (direction != nil) {
-				let frame = gridView.convert(endingCell!.frame, to: gridView)
-				let point = CGPoint(x: frame.midX, y: frame.midY)
+				let frame = self.delegate2?.getView().convert(endingCell!.frame, to: self.delegate2?.getView())
+				let point = CGPoint(x: frame!.midX, y: frame!.midY)
 				
 				currentLine?.end = point
 				currentDirection = direction
@@ -89,22 +89,22 @@ class DrawView: UIView {
 		let touch = touches.first!; //get first touch event and unwrap optional
 		let location = touch.location(in: self); //get location in view co-ordinate
 		
-		let startingCell = gridView.getCellAtPoint(point: currentLine!.begin)
-		let endingCell = gridView.getCellAtPoint(point: location)
+		let startingCell = self.delegate2?.getCellAtPoint(point: currentLine!.begin)
+		let endingCell = self.delegate2?.getCellAtPoint(point: location)
 		if (endingCell != nil) {
-			let direction = gridView.getDirection(startingCell: startingCell!, endingCell: endingCell!)
+			let direction = self.delegate2?.getDirection(startingCell: startingCell!, endingCell: endingCell!)
 			
 			if (direction != nil) {
-				let frame = gridView.convert(endingCell!.frame, to: gridView)
-				let point = CGPoint(x: frame.midX, y: frame.midY)
+				let frame = self.delegate2?.getView().convert(endingCell!.frame, to: self.delegate2?.getView())
+				let point = CGPoint(x: frame!.midX, y: frame!.midY)
 				
 				currentLine?.end = point
 				currentDirection = direction
 			}
 		}
-		let start = gridView.getCellAtPoint(point: currentLine!.begin)!
-		let end = gridView.getCellAtPoint(point: currentLine!.end)!
-		self.delegate?.checkWord(startingCell: start, endingCell: end, direction: currentDirection)
+		let start = self.delegate2?.getCellAtPoint(point: currentLine!.begin)!
+		let end = self.delegate2?.getCellAtPoint(point: currentLine!.end)!
+		self.delegate1?.checkWord(startingCell: start!, endingCell: end!, direction: currentDirection)
 		setNeedsDisplay(); //this view needs to be updated
 	}
 	

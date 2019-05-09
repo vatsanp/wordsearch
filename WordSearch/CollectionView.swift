@@ -8,8 +8,18 @@
 
 import UIKit
 
-class CollectionView: UICollectionView {
+protocol GetDetailsProtocol {
+	func getView() -> CollectionView
+	func getCellAtPoint(point: CGPoint) -> CollectionViewCell!
+	func getDirection(startingCell: CollectionViewCell, endingCell: CollectionViewCell) -> CGPoint!
+}
 
+class CollectionView: UICollectionView, GetDetailsProtocol {
+
+	func getView() -> CollectionView {
+		return self
+	}
+	
 	func getCellAtPoint(point: CGPoint) -> CollectionViewCell! {
 		let index = self.indexPathForItem(at: point)
 		if (index != nil) {
