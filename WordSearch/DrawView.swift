@@ -111,6 +111,7 @@ class DrawView: UIView {
 	override func touchesCancelled(_ touches: Set<UITouch>?, with event: UIEvent?) {
 //		print(#function) //for debugging
 		currentLine = nil
+		currentDirection = nil
 		setNeedsDisplay()
 	}
 

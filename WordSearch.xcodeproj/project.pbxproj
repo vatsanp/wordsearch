@@ -8,19 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		4A24A178228281E300F868FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A24A177228281E300F868FE /* AppDelegate.swift */; };
-		4A24A17A228281E300F868FE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A24A179228281E300F868FE /* ViewController.swift */; };
+		4A24A17A228281E300F868FE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A24A179228281E300F868FE /* GameViewController.swift */; };
 		4A24A17D228281E300F868FE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A24A17B228281E300F868FE /* Main.storyboard */; };
 		4A24A17F228281E300F868FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A24A17E228281E300F868FE /* Assets.xcassets */; };
 		4A24A182228281E300F868FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A24A180228281E300F868FE /* LaunchScreen.storyboard */; };
 		4A24A18A2282822300F868FE /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A24A1892282822300F868FE /* CollectionViewCell.swift */; };
 		4A3044E62282874D001C2DB0 /* DrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3044E52282874D001C2DB0 /* DrawView.swift */; };
 		4A3044EC2283B26C001C2DB0 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3044EB2283B26C001C2DB0 /* CollectionView.swift */; };
+		4A3044EE228511E1001C2DB0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3044ED228511E1001C2DB0 /* HomeViewController.swift */; };
+		4AA3F9BC22851C690008F2BA /* EndViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA3F9BB22851C690008F2BA /* EndViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4A24A174228281E300F868FE /* WordSearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WordSearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A24A177228281E300F868FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4A24A179228281E300F868FE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4A24A179228281E300F868FE /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		4A24A17C228281E300F868FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4A24A17E228281E300F868FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4A24A181228281E300F868FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -28,6 +30,8 @@
 		4A24A1892282822300F868FE /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		4A3044E52282874D001C2DB0 /* DrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawView.swift; sourceTree = "<group>"; };
 		4A3044EB2283B26C001C2DB0 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		4A3044ED228511E1001C2DB0 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		4AA3F9BB22851C690008F2BA /* EndViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,10 +65,12 @@
 			isa = PBXGroup;
 			children = (
 				4A24A177228281E300F868FE /* AppDelegate.swift */,
-				4A24A179228281E300F868FE /* ViewController.swift */,
+				4A3044ED228511E1001C2DB0 /* HomeViewController.swift */,
+				4A24A179228281E300F868FE /* GameViewController.swift */,
+				4AA3F9BB22851C690008F2BA /* EndViewController.swift */,
 				4A3044EB2283B26C001C2DB0 /* CollectionView.swift */,
-				4A3044E52282874D001C2DB0 /* DrawView.swift */,
 				4A24A1892282822300F868FE /* CollectionViewCell.swift */,
+				4A3044E52282874D001C2DB0 /* DrawView.swift */,
 				4A24A17B228281E300F868FE /* Main.storyboard */,
 				4A24A17E228281E300F868FE /* Assets.xcassets */,
 				4A24A180228281E300F868FE /* LaunchScreen.storyboard */,
@@ -144,11 +150,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A24A17A228281E300F868FE /* ViewController.swift in Sources */,
+				4A24A17A228281E300F868FE /* GameViewController.swift in Sources */,
 				4A3044EC2283B26C001C2DB0 /* CollectionView.swift in Sources */,
 				4A24A178228281E300F868FE /* AppDelegate.swift in Sources */,
+				4AA3F9BC22851C690008F2BA /* EndViewController.swift in Sources */,
 				4A3044E62282874D001C2DB0 /* DrawView.swift in Sources */,
 				4A24A18A2282822300F868FE /* CollectionViewCell.swift in Sources */,
+				4A3044EE228511E1001C2DB0 /* HomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
