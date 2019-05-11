@@ -172,13 +172,22 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Yws-uh-Xwb"/>
                                 </connections>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guj-VG-j9p">
+                                <rect key="frame" x="340" y="244" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="3Pa-fk-S4G" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="0Ks-S6-H6z"/>
                             <constraint firstItem="3Pa-fk-S4G" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="0S4-7B-aPT"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="fda-I4-X9s" secondAttribute="bottom" id="2ew-NI-lea"/>
+                            <constraint firstItem="guj-VG-j9p" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="HJQ-kg-Cgd"/>
                             <constraint firstItem="B56-hC-BJl" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="SfE-kg-MDb"/>
+                            <constraint firstItem="3Pa-fk-S4G" firstAttribute="top" secondItem="guj-VG-j9p" secondAttribute="bottom" constant="8" id="urk-9r-80E"/>
+                            <constraint firstItem="guj-VG-j9p" firstAttribute="trailing" secondItem="B56-hC-BJl" secondAttribute="trailing" id="vKR-bQ-d83"/>
                             <constraint firstItem="fda-I4-X9s" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="y7X-xP-Oeh"/>
                             <constraint firstItem="B56-hC-BJl" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zPd-8z-yLS"/>
                         </constraints>
@@ -187,6 +196,7 @@
                     <connections>
                         <outlet property="drawView" destination="3Pa-fk-S4G" id="ff9-lQ-52C"/>
                         <outlet property="gridView" destination="B56-hC-BJl" id="ZMd-r7-8e5"/>
+                        <outlet property="timerLabel" destination="guj-VG-j9p" id="ojc-Nf-egM"/>
                         <outlet property="wordBankView" destination="fda-I4-X9s" id="RwH-nC-hoy"/>
                         <segue destination="l6B-cm-gm3" kind="show" identifier="gameOverSegue" id="DWQ-sO-Mf2"/>
                     </connections>
@@ -203,22 +213,40 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uW5-lT-kBB">
-                                <rect key="frame" x="182" y="433" width="50" height="30"/>
-                                <state key="normal" title="Restart"/>
-                                <connections>
-                                    <action selector="restartGame:" destination="l6B-cm-gm3" eventType="touchUpInside" id="aE2-Zy-4v2"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="200" translatesAutoresizingMaskIntoConstraints="NO" id="hHr-Cc-92Z">
+                                <rect key="frame" x="176.5" y="318.5" width="61.5" height="259.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fjL-1e-Rmw">
+                                        <rect key="frame" x="0.0" y="0.0" width="61.5" height="29.5"/>
+                                        <attributedString key="attributedText">
+                                            <fragment content="Label">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="system" size="25"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uW5-lT-kBB">
+                                        <rect key="frame" x="0.0" y="229.5" width="61.5" height="30"/>
+                                        <state key="normal" title="Restart"/>
+                                        <connections>
+                                            <action selector="restartGame:" destination="l6B-cm-gm3" eventType="touchUpInside" id="aE2-Zy-4v2"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="uW5-lT-kBB" firstAttribute="centerX" secondItem="oQY-y1-Tqh" secondAttribute="centerX" id="jK2-7p-au0"/>
-                            <constraint firstItem="uW5-lT-kBB" firstAttribute="centerY" secondItem="oQY-y1-Tqh" secondAttribute="centerY" id="oaV-OR-49R"/>
+                            <constraint firstItem="hHr-Cc-92Z" firstAttribute="centerX" secondItem="oQY-y1-Tqh" secondAttribute="centerX" id="RUT-Ha-ObW"/>
+                            <constraint firstItem="hHr-Cc-92Z" firstAttribute="centerY" secondItem="oQY-y1-Tqh" secondAttribute="centerY" id="Umm-V7-ypG"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RG5-fs-v7w"/>
                     </view>
                     <connections>
+                        <outlet property="endMessageLabel" destination="fjL-1e-Rmw" id="fPf-tt-nfj"/>
                         <outlet property="restartButton" destination="uW5-lT-kBB" id="GRy-mG-AFs"/>
                         <segue destination="ZhE-L5-w4T" kind="show" identifier="restartSegue" id="bLK-hq-dJZ"/>
                     </connections>

@@ -42,6 +42,9 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	var directions: [Direction: Int]!
 	var grid: [[Character]] = []
 	var wordsFound = 0
+	var timer = Timer()
+	var seconds = 120
+	var gameWon = false
 	
 	var difficulty: Difficulty!
 	var timerOn = false
@@ -49,6 +52,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	@IBOutlet var gridView: CollectionView!
 	@IBOutlet var drawView: DrawView!
 	@IBOutlet var wordBankView: CollectionView!
+	@IBOutlet var timerLabel: UILabel!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -70,6 +74,14 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 							  Direction(-1,-1): 0,
 							  Direction(0,-1): 0,
 							  Direction(1,-1): 0]
+		}
+		
+		if timerOn {
+			timerLabel.text = "2:00"
+			timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.updateTimer)), userInfo: nil, repeats: true)
+		}
+		else {
+			timerLabel.isHidden = true
 		}
 		
 		for word in wordBank {
@@ -215,9 +227,6 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 			drawView.finishedLines.append(drawView.currentLine!)
 			print("Correct")
 			wordsFound += 1
-			print(wordBankView)
-			print(wordBank.firstIndex(of: word)!)
-			print(wordBankView.visibleCells.count)
 			let c = wordBankView.cellForItem(at: IndexPath(row: wordBank.firstIndex(of: word)!, section: 0)) as! CollectionViewCell
 			c.label.isHidden = true
 		}
@@ -227,7 +236,32 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		}
 		
 		if wordsFound == wordBank.count {
+			gameWon = true
 			performSegue(withIdentifier: "gameOverSegue", sender: nil)
+		}
+	}
+	
+	@objc func updateTimer() {
+		if seconds < 1 {
+			timer.invalidate()
+			gameWon = false
+			performSegue(withIdentifier: "gameOverSegue", sender: nil)
+		}
+		else if seconds < 60 {
+			seconds -= 1
+			timerLabel.text = String(seconds)
+		}
+		else {
+			seconds -= 1     //This will decrement(count down)the seconds.
+			timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60) //This will update the label.
+		}
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		let destinationVC = segue.destination as! EndViewController
+		
+		if (segue.identifier == "gameOverSegue") {
+			destinationVC.gameWon = gameWon
 		}
 	}
 }
