@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 let NUM_ROWS = 10, NUM_COLS = 10
 
@@ -43,8 +44,16 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	var grid: [[Character]] = []
 	var wordsFound = 0
 	var timer = Timer()
-	var seconds = 120
+	var seconds: Int!
 	var gameWon = false
+	
+	let timerLayer = CAShapeLayer()
+	let progressLayer = CAShapeLayer()
+	let pulseTimerLayer = CAShapeLayer()
+	let pulseProgressLayer = CAShapeLayer()
+	
+	let correctSound: SystemSoundID = 1114
+	let wrongSound: SystemSoundID = 1257
 	
 	var difficulty: Difficulty!
 	var timerOn = false
@@ -53,9 +62,17 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	@IBOutlet var drawView: DrawView!
 	@IBOutlet var wordBankView: CollectionView!
 	@IBOutlet var timerLabel: UILabel!
+	@IBOutlet var progressLabel: UILabel!
+	@IBOutlet var timerView: UIView!
+	@IBOutlet var progressView: UIView!
+	@IBOutlet var startButton: UIButton!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		initializeLayers()
+		timerLabel.layer.zPosition = 5
+		progressLabel.layer.zPosition = 5
 		
 		grid = [[Character]](repeating: [Character](repeating: "-", count: NUM_COLS), count: NUM_ROWS)
 		
@@ -77,12 +94,15 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		}
 		
 		if timerOn {
-			timerLabel.text = "2:00"
-			timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.updateTimer)), userInfo: nil, repeats: true)
+			seconds = 120
+			timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
 		}
 		else {
-			timerLabel.isHidden = true
+			seconds = 0
+			timerLabel.text = "0"
 		}
+		
+		progressLabel.text = "\(wordsFound)/\(wordBank.count)"
 		
 		for word in wordBank {
 			placeWord(word: word, grid: &grid)
@@ -92,6 +112,15 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		
 		self.drawView.delegate1 = self
 		self.drawView.delegate2 = gridView
+	}
+	
+	@IBAction func startGame(_ sender: Any) {
+		startButton.isHidden = true
+		gridView.isHidden = false
+		drawView.isHidden = false
+		timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.updateTimer)), userInfo: nil, repeats: true)
+		animateTimerView()
+		animatePulse()
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -223,38 +252,179 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		}
 		print(word)
 		
-		if wordBank.contains(word) || wordBank.contains(String(word.reversed())){
+		if wordBank.contains(word) || wordBank.contains(String(word.reversed())) {
+			if (wordBank.contains(String(word.reversed()))) {
+				word = String(word.reversed())
+			}
 			drawView.finishedLines.append(drawView.currentLine!)
 			print("Correct")
 			wordsFound += 1
-			let c = wordBankView.cellForItem(at: IndexPath(row: wordBank.firstIndex(of: word)!, section: 0)) as! CollectionViewCell
-			c.label.isHidden = true
+			AudioServicesPlaySystemSound(correctSound)
+			progressLabel.text = "\(wordsFound)/\(wordBank.count)"
+			animateProgressView()
+			let index = wordBank.firstIndex(of: word)!
+			let cell = wordBankView.cellForItem(at: IndexPath(row: index, section: 0)) as! CollectionViewCell
+			cell.label.isHidden = true
 		}
 		else {
 			drawView.currentLine = nil
 			print("Wrong")
+			AudioServicesPlaySystemSound(wrongSound)
 		}
 		
 		if wordsFound == wordBank.count {
 			gameWon = true
-			performSegue(withIdentifier: "gameOverSegue", sender: nil)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+				self.performSegue(withIdentifier: "gameOverSegue", sender: nil)
+			}
 		}
 	}
 	
 	@objc func updateTimer() {
-		if seconds < 1 {
-			timer.invalidate()
-			gameWon = false
-			performSegue(withIdentifier: "gameOverSegue", sender: nil)
-		}
-		else if seconds < 60 {
-			seconds -= 1
-			timerLabel.text = String(seconds)
+		if timerOn {
+			if seconds < 1 {
+				timer.invalidate()
+				gameWon = false
+				performSegue(withIdentifier: "gameOverSegue", sender: nil)
+			}
+			else if seconds < 60 {
+				seconds -= 1
+				timerLabel.text = String(seconds)
+			}
+			else {
+				seconds -= 1     //This will decrement(count down)the seconds.
+				timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60) //This will update the label.
+			}
 		}
 		else {
-			seconds -= 1     //This will decrement(count down)the seconds.
-			timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60) //This will update the label.
+			if seconds < 60 {
+				seconds += 1
+				timerLabel.text = String(seconds)
+			}
+			else if seconds % 60 == 0 {
+				seconds += 1
+				timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
+				timerLayer.removeAllAnimations()
+				animateTimerView()
+			}
+			else if seconds > 60 {
+				seconds += 1
+				timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
+			}
 		}
+	}
+	
+	func initializeLayers() {
+		let trackLayer1 = CAShapeLayer()
+		let trackLayer2 = CAShapeLayer()
+		
+		let center = timerView.center
+		let circularPath = UIBezierPath(arcCenter: center, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true)
+		
+		trackLayer1.path = circularPath.cgPath
+		trackLayer2.path = circularPath.cgPath
+		
+		trackLayer1.strokeColor = UIColor.lightGray.cgColor
+		trackLayer2.strokeColor = UIColor.lightGray.cgColor
+		trackLayer1.fillColor = UIColor.clear.cgColor
+		trackLayer2.fillColor = UIColor.clear.cgColor
+		trackLayer1.lineWidth = 5
+		trackLayer2.lineWidth = 5
+		trackLayer1.lineCap = CAShapeLayerLineCap.round
+		trackLayer2.lineCap = CAShapeLayerLineCap.round
+		
+		timerLayer.path = circularPath.cgPath
+		timerLayer.strokeColor = UIColor.red.cgColor
+		timerLayer.fillColor = UIColor.white.cgColor
+		timerLayer.lineWidth = 10
+		timerLayer.lineCap = CAShapeLayerLineCap.round
+		timerLayer.strokeEnd = 0
+		
+		progressLayer.path = circularPath.cgPath
+		progressLayer.strokeColor = UIColor.blue.cgColor
+		progressLayer.fillColor = UIColor.white.cgColor
+		progressLayer.lineWidth = 10
+		progressLayer.lineCap = CAShapeLayerLineCap.round
+		progressLayer.strokeEnd = 0
+		
+		pulseTimerLayer.path = UIBezierPath(arcCenter: .zero, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true).cgPath
+		pulseTimerLayer.strokeColor = UIColor.clear.cgColor
+		pulseTimerLayer.fillColor = UIColor.red.cgColor
+		pulseTimerLayer.opacity = 0.2
+		pulseTimerLayer.lineWidth = 10
+		pulseTimerLayer.lineCap = CAShapeLayerLineCap.round
+		pulseTimerLayer.position = CGPoint(x: timerView.frame.width/2, y: timerView.frame.height/2)
+		
+		pulseProgressLayer.path = UIBezierPath(arcCenter: .zero, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true).cgPath
+		pulseProgressLayer.strokeColor = UIColor.clear.cgColor
+		pulseProgressLayer.fillColor = UIColor.blue.cgColor
+		pulseProgressLayer.opacity = 0.2
+		pulseProgressLayer.lineWidth = 10
+		pulseProgressLayer.lineCap = CAShapeLayerLineCap.round
+		pulseProgressLayer.position = CGPoint(x: progressView.frame.width/2, y: progressView.frame.height/2)
+		
+		
+		timerView.layer.addSublayer(pulseTimerLayer)
+		timerView.layer.addSublayer(trackLayer1)
+		timerView.layer.addSublayer(timerLayer)
+		
+		progressView.layer.addSublayer(pulseProgressLayer)
+		progressView.layer.addSublayer(trackLayer2)
+		progressView.layer.addSublayer(progressLayer)
+		
+		animatePulse()
+	}
+	
+	func animateTimerView() {
+		if timerOn {
+			let timerAnimation = CABasicAnimation(keyPath: "strokeEnd")
+		
+			timerAnimation.toValue = 1
+			timerAnimation.duration = CFTimeInterval(seconds)
+			
+			timerAnimation.fillMode = CAMediaTimingFillMode.forwards
+			timerAnimation.isRemovedOnCompletion = false
+			
+			timerLayer.add(timerAnimation, forKey: "timerAnimation")
+		}
+		else {
+			print("TEST1")
+			let timerAnimation = CABasicAnimation(keyPath: "strokeEnd")
+		
+			timerAnimation.toValue = 1
+			timerAnimation.duration = 60
+			timerAnimation.repeatCount = Float.infinity
+		
+			timerAnimation.fillMode = CAMediaTimingFillMode.forwards
+			timerAnimation.isRemovedOnCompletion = false
+		
+			timerLayer.add(timerAnimation, forKey: "timerAnimation")
+		}
+	}
+	
+	func animateProgressView() {
+		let progressAnimation = CABasicAnimation(keyPath: "strokeEnd")
+		
+		progressAnimation.fromValue = (Float(wordsFound-1)) / Float(wordBank.count)
+		progressAnimation.toValue = Float(wordsFound) / Float(wordBank.count)
+		progressAnimation.duration = 1
+
+		progressAnimation.fillMode = CAMediaTimingFillMode.forwards
+		progressAnimation.isRemovedOnCompletion = false
+		
+		progressLayer.add(progressAnimation, forKey: "progressAnimation")
+	}
+	
+	func animatePulse() {
+		let animation = CABasicAnimation(keyPath: "transform.scale")
+		
+		animation.toValue = 1.3
+		animation.duration = 0.5
+		animation.autoreverses = true
+		animation.repeatCount = Float.infinity
+		
+		pulseProgressLayer.add(animation, forKey: "pulsingProgress")
+		pulseTimerLayer.add(animation, forKey: "pulsingTimer")
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

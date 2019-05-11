@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import CoreGraphics
+import AVFoundation
 
 struct Line {
 	var begin = CGPoint.zero
@@ -23,6 +24,9 @@ class DrawView: UIView {
 	var currentLine: Line?
 	var finishedLines = [Line]();
 	var currentDirection: CGPoint!
+	
+	let generator = UIImpactFeedbackGenerator(style: .light)
+	let tapSound: SystemSoundID = 1104
 	
 	func strokeLine(line: Line){
 		//Use BezierPath to draw lines
@@ -52,12 +56,16 @@ class DrawView: UIView {
 //		print(#function) //for debugging
 		let touch = touches.first!; //get first touch event and unwrap optional
 		let location = touch.location(in: self); //get location in view co-ordinate
-		print(location)
+		
+		generator.prepare()
 		
 		let cell = self.delegate2?.getCellAtPoint(point: location)
 		let backUpCell = self.delegate2?.getCellAtPoint(point: CGPoint(x: location.x-5, y: location.y-5))
 		let frame = self.delegate2?.getView().convert(cell?.frame ?? backUpCell!.frame, to: self.delegate2?.getView())
 		let point = CGPoint(x: frame!.midX, y: frame!.midY)
+		
+		generator.impactOccurred()
+		AudioServicesPlaySystemSound(tapSound)
 		
 		currentLine = Line(begin: point, end: point);
 		setNeedsDisplay(); //this view needs to be updated
@@ -68,6 +76,8 @@ class DrawView: UIView {
 		let touch = touches.first!; //get first touch event and unwrap optional
 		let location = touch.location(in: self); //get location in view co-ordinate
 		
+		generator.prepare()
+		
 		let startingCell = self.delegate2?.getCellAtPoint(point: currentLine!.begin)
 		let endingCell = self.delegate2?.getCellAtPoint(point: location)
 		if (endingCell != nil ) {
@@ -76,6 +86,12 @@ class DrawView: UIView {
 			if (direction != nil) {
 				let frame = self.delegate2?.getView().convert(endingCell!.frame, to: self.delegate2?.getView())
 				let point = CGPoint(x: frame!.midX, y: frame!.midY)
+				
+				
+				if currentLine?.end != point {
+					generator.impactOccurred()
+					AudioServicesPlaySystemSound(tapSound)
+				}
 				
 				currentLine?.end = point
 				currentDirection = direction
