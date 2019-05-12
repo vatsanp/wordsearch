@@ -43,6 +43,8 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	var directions: [Direction: Int]!
 	var grid: [[Character]] = []
 	var wordsFound = 0
+	var pointsHistory: [Int] = []
+	var points = 0
 	var timer = Timer()
 	var seconds: Int!
 	var gameWon = false
@@ -61,6 +63,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	@IBOutlet var gridView: CollectionView!
 	@IBOutlet var drawView: DrawView!
 	@IBOutlet var wordBankView: CollectionView!
+	@IBOutlet var pointsLabel: UILabel!
 	@IBOutlet var timerLabel: UILabel!
 	@IBOutlet var progressLabel: UILabel!
 	@IBOutlet var timerView: UIView!
@@ -69,6 +72,25 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		let storage = UserDefaults.standard
+		
+		if timerOn {
+			seconds = 120
+			timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
+			
+			if let storedPoints = storage.array(forKey: "storedTimerPoints") {
+				pointsHistory = (storedPoints as! [Int])
+			}
+		}
+		else {
+			seconds = 0
+			timerLabel.text = "0"
+			
+			if let storedPoints = storage.array(forKey: "storedCasualPoints") {
+				pointsHistory = (storedPoints as! [Int])
+			}
+		}
 		
 		initializeLayers()
 		timerLabel.layer.zPosition = 5
@@ -93,16 +115,13 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 							  Direction(1,-1): 0]
 		}
 		
-		if timerOn {
-			seconds = 120
-			timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
-		}
-		else {
-			seconds = 0
-			timerLabel.text = "0"
+		for i in 0..<wordBank.count {
+			wordBank[i] = wordBank[i].uppercased()
 		}
 		
 		progressLabel.text = "\(wordsFound)/\(wordBank.count)"
+		
+		pointsLabel.text = "0"
 		
 		for word in wordBank {
 			placeWord(word: word, grid: &grid)
@@ -123,6 +142,9 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		animatePulse()
 	}
 	
+	@IBAction func backHome(_ sender: UIButton) {
+		performSegue(withIdentifier: "backHomeSegue", sender: nil)
+	}
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if (collectionView == gridView) { return NUM_ROWS * NUM_COLS }
 		else { return wordBank.count }
@@ -170,7 +192,8 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 				var y = yStart
 				
 				var success = true
-				for letter in word {
+				for letter in word.uppercased() {
+					print(letter)
 					if (grid[x][y] != letter && grid[x][y] != "-") {
 						success = false
 					}
@@ -182,7 +205,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 				x = xStart
 				y = yStart
 				
-				for letter in word {
+				for letter in word.uppercased() {
 					grid[x][y] = letter
 					x += direction.x; y += direction.y
 				}
@@ -259,12 +282,15 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 			drawView.finishedLines.append(drawView.currentLine!)
 			print("Correct")
 			wordsFound += 1
+			if timerOn { points += 20 * seconds }
+			else { points += max(200-seconds, 20) }
+			pointsLabel.text = String(points)
 			AudioServicesPlaySystemSound(correctSound)
 			progressLabel.text = "\(wordsFound)/\(wordBank.count)"
 			animateProgressView()
 			let index = wordBank.firstIndex(of: word)!
 			let cell = wordBankView.cellForItem(at: IndexPath(row: index, section: 0)) as! CollectionViewCell
-			cell.label.isHidden = true
+			cell.label.isEnabled = false
 		}
 		else {
 			drawView.currentLine = nil
@@ -274,7 +300,18 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		
 		if wordsFound == wordBank.count {
 			gameWon = true
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+			timer.invalidate()
+			let pausedTime = timerLayer.convertTime(CACurrentMediaTime(), from: nil)
+			timerLayer.speed = 0.0
+			timerLayer.timeOffset = pausedTime
+			pointsHistory.append(points)
+			
+			if timerOn { UserDefaults.standard.set(pointsHistory, forKey: "storedTimerPoints") }
+			else { UserDefaults.standard.set(pointsHistory, forKey: "storedCasualPoints") }
+			
+			progressLayer.strokeColor = UIColor.green.cgColor
+			pulseProgressLayer.fillColor = UIColor.green.cgColor
+			DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
 				self.performSegue(withIdentifier: "gameOverSegue", sender: nil)
 			}
 		}
@@ -318,8 +355,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		let trackLayer1 = CAShapeLayer()
 		let trackLayer2 = CAShapeLayer()
 		
-		let center = timerView.center
-		let circularPath = UIBezierPath(arcCenter: center, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true)
+		let circularPath = UIBezierPath(arcCenter: .zero, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true)
 		
 		trackLayer1.path = circularPath.cgPath
 		trackLayer2.path = circularPath.cgPath
@@ -332,6 +368,8 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		trackLayer2.lineWidth = 5
 		trackLayer1.lineCap = CAShapeLayerLineCap.round
 		trackLayer2.lineCap = CAShapeLayerLineCap.round
+		trackLayer1.position = CGPoint(x: timerView.frame.width/2, y: timerView.frame.height/2)
+		trackLayer2.position = CGPoint(x: progressView.frame.width/2, y: progressView.frame.height/2)
 		
 		timerLayer.path = circularPath.cgPath
 		timerLayer.strokeColor = UIColor.red.cgColor
@@ -339,6 +377,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		timerLayer.lineWidth = 10
 		timerLayer.lineCap = CAShapeLayerLineCap.round
 		timerLayer.strokeEnd = 0
+		timerLayer.position = CGPoint(x: timerView.frame.width/2, y: timerView.frame.height/2)
 		
 		progressLayer.path = circularPath.cgPath
 		progressLayer.strokeColor = UIColor.blue.cgColor
@@ -346,6 +385,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		progressLayer.lineWidth = 10
 		progressLayer.lineCap = CAShapeLayerLineCap.round
 		progressLayer.strokeEnd = 0
+		progressLayer.position = CGPoint(x: progressView.frame.width/2, y: progressView.frame.height/2)
 		
 		pulseTimerLayer.path = UIBezierPath(arcCenter: .zero, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true).cgPath
 		pulseTimerLayer.strokeColor = UIColor.clear.cgColor
@@ -428,10 +468,16 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		let destinationVC = segue.destination as! EndViewController
-		
-		if (segue.identifier == "gameOverSegue") {
-			destinationVC.gameWon = gameWon
+		if segue.destination as? EndViewController != nil {
+			let destinationVC = segue.destination as! EndViewController
+			if (segue.identifier == "gameOverSegue") {
+				destinationVC.gameWon = gameWon
+				destinationVC.pointsHistory = pointsHistory
+			}
 		}
+	}
+	
+	func usePortraitConstraints() {
+		
 	}
 }
