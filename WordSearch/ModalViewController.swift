@@ -15,15 +15,13 @@ class ModalViewController: UIViewController {
 	@IBOutlet weak var modalView: UIView!
 	
 	//–––––FUNCTIONS–––––
-	//Function for when view controller first loads
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		//Round the corners of the modal view
-		modalView.layer.cornerRadius = 10
+		modalView.layer.cornerRadius = 10		//Round the corners of modalView
 		modalView.layer.masksToBounds = true
 	}
-	
+	//Dismiss Modal Segue
 	@IBAction func dismiss(_ sender: UIButton) {
 		dismiss(animated: true) {}
 	}

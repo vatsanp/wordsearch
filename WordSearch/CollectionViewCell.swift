@@ -8,6 +8,7 @@
 
 import UIKit
 
+//Class for custom cells in collection view
 class CollectionViewCell: UICollectionViewCell {
 	
 	var x: Int!

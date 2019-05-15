@@ -9,8 +9,10 @@
 import UIKit
 import AVFoundation
 
+//View Controller for End screen
 class EndViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	
+	//–––––VARIABLES AND OUTLETS–––––
 	var gameWon: Bool!
 	var points: Int!
 	var pointsHistory: [Int]!
@@ -24,18 +26,19 @@ class EndViewController: UIViewController, UITableViewDataSource, UITableViewDel
 	@IBOutlet var restartButton: UIButton!
 	@IBOutlet var leaderboardTableView: UITableView!
 	
+	//–––––FUNCTIONS–––––
 	override func viewDidLoad() {
         super.viewDidLoad()
 		
-		restartButton.clipsToBounds = true
+		restartButton.clipsToBounds = true		//Round corners or restart button
 		restartButton.layer.cornerRadius = 10
 		
-		pointsHistory.sort()
+		pointsHistory.sort()					//Sort points
 		pointsHistory.reverse()
 		
 		leaderboardTableView.reloadData()
 
-		if gameWon {
+		if gameWon {							//Display screen based on win or lose
 			endMessageLabel.text = "Congratulations!"
 			AudioServicesPlaySystemSound(successSound)
 		}
@@ -46,6 +49,7 @@ class EndViewController: UIViewController, UITableViewDataSource, UITableViewDel
 		finalScoreLabel.text = "You scored \(points!) points!"
     }
 	
+	//Segue back to home screen
 	@IBAction func restartGame(_ sender: UIButton) {
 		performSegue(withIdentifier: "restartSegue", sender: sender)
 	}

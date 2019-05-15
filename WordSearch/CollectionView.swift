@@ -8,6 +8,7 @@
 
 import UIKit
 
+//Protocol to use member functions
 protocol CollectionViewProtocol {
 	func getView() -> CollectionView
 	func getCellAtPoint(point: CGPoint) -> CollectionViewCell!
@@ -15,12 +16,14 @@ protocol CollectionViewProtocol {
 	func updateTextColor(point1: CGPoint, point2: CGPoint)
 }
 
+//Class for custom collection views
 class CollectionView: UICollectionView, CollectionViewProtocol {
 
 	func getView() -> CollectionView {
 		return self
 	}
 	
+	//Get cell that is at any point on view
 	func getCellAtPoint(point: CGPoint) -> CollectionViewCell! {
 		let index = self.indexPathForItem(at: point)
 		if (index != nil) {
@@ -31,6 +34,7 @@ class CollectionView: UICollectionView, CollectionViewProtocol {
 		return nil
 	}
 	
+	//Get direction between 2 cells, also checks if 2 cells create valid line
 	func getDirection(startingCell: CollectionViewCell, endingCell: CollectionViewCell) -> CGPoint! {
 		if (startingCell == endingCell) {
 			startingCell.label.textColor = UIColor.white
@@ -120,6 +124,7 @@ class CollectionView: UICollectionView, CollectionViewProtocol {
 		return nil
 	}
 
+	//Update colour of text on game board
 	func updateTextColor(point1: CGPoint, point2: CGPoint) {
 		resetTextColor()
 		
@@ -134,7 +139,7 @@ class CollectionView: UICollectionView, CollectionViewProtocol {
 		
 		currentCell.label.textColor = UIColor.white
 		
-		while x != end.x || y != end.y {
+		while x != end.x || y != end.y {	//Iterate through current line
 			x += Int(direction.x)
 			y += Int(direction.y)
 			
@@ -144,12 +149,11 @@ class CollectionView: UICollectionView, CollectionViewProtocol {
 		}
 	}
 	
+	//Reset all cells to black except confirmed words
 	func resetTextColor() {
-		for cell in self.visibleCells {
-			let c = cell as! CollectionViewCell
-			
-			if c.isInLine { c.label.textColor = UIColor.white }
-			else { c.label.textColor = UIColor.black }
+		for cell in self.visibleCells as! [CollectionViewCell] {			
+			if cell.isInLine { cell.label.textColor = UIColor.white }
+			else { cell.label.textColor = UIColor.black }
 		}
 	}
 }

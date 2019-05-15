@@ -309,7 +309,6 @@
                     </view>
                     <connections>
                         <outlet property="modalView" destination="gpO-zd-N17" id="4sc-nU-3RO"/>
-                        <segue destination="ZhE-L5-w4T" kind="presentation" identifier="dismissSegue" id="7sh-i6-tqi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CGW-ag-GRr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1032,6 +1031,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Pa9-dL-TbD"/>
+        <segue reference="bLK-hq-dJZ"/>
     </inferredMetricsTieBreakers>
 </document>

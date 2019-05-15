@@ -20,7 +20,18 @@
 		4A4D72C5228BBE6F00E46BC2 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4D72C4228BBE6F00E46BC2 /* ModalViewController.swift */; };
 		4AA3F9BC22851C690008F2BA /* EndViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA3F9BB22851C690008F2BA /* EndViewController.swift */; };
 		4AA3F9DC2287D9980008F2BA /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA3F9DB2287D9980008F2BA /* TableViewCell.swift */; };
+		4AD97FBA228BDF860092AE0D /* GameViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD97FB9228BDF860092AE0D /* GameViewControllerTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4AD97FAF228BD1710092AE0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A24A16C228281E200F868FE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A24A173228281E300F868FE;
+			remoteInfo = WordSearch;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4A24A174228281E300F868FE /* WordSearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WordSearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,10 +49,20 @@
 		4A4D72C4228BBE6F00E46BC2 /* ModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
 		4AA3F9BB22851C690008F2BA /* EndViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndViewController.swift; sourceTree = "<group>"; };
 		4AA3F9DB2287D9980008F2BA /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		4AD97FAA228BD1710092AE0D /* WordSearchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WordSearchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AD97FAE228BD1710092AE0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4AD97FB9228BDF860092AE0D /* GameViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewControllerTests.swift; path = ../../../../../../.Trash/GameViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		4A24A171228281E300F868FE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4AD97FA7228BD1710092AE0D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -55,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				4A24A176228281E300F868FE /* WordSearch */,
+				4AD97FAB228BD1710092AE0D /* WordSearchTests */,
 				4A24A175228281E300F868FE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				4A24A174228281E300F868FE /* WordSearch.app */,
+				4AD97FAA228BD1710092AE0D /* WordSearchTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,6 +111,15 @@
 			path = WordSearch;
 			sourceTree = "<group>";
 		};
+		4AD97FAB228BD1710092AE0D /* WordSearchTests */ = {
+			isa = PBXGroup;
+			children = (
+				4AD97FB9228BDF860092AE0D /* GameViewControllerTests.swift */,
+				4AD97FAE228BD1710092AE0D /* Info.plist */,
+			);
+			path = WordSearchTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -108,6 +140,24 @@
 			productReference = 4A24A174228281E300F868FE /* WordSearch.app */;
 			productType = "com.apple.product-type.application";
 		};
+		4AD97FA9228BD1710092AE0D /* WordSearchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4AD97FB3228BD1710092AE0D /* Build configuration list for PBXNativeTarget "WordSearchTests" */;
+			buildPhases = (
+				4AD97FA6228BD1710092AE0D /* Sources */,
+				4AD97FA7228BD1710092AE0D /* Frameworks */,
+				4AD97FA8228BD1710092AE0D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4AD97FB0228BD1710092AE0D /* PBXTargetDependency */,
+			);
+			name = WordSearchTests;
+			productName = WordSearchTests;
+			productReference = 4AD97FAA228BD1710092AE0D /* WordSearchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -120,6 +170,11 @@
 				TargetAttributes = {
 					4A24A173228281E300F868FE = {
 						CreatedOnToolsVersion = 10.2.1;
+					};
+					4AD97FA9228BD1710092AE0D = {
+						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1020;
+						TestTargetID = 4A24A173228281E300F868FE;
 					};
 				};
 			};
@@ -137,6 +192,7 @@
 			projectRoot = "";
 			targets = (
 				4A24A173228281E300F868FE /* WordSearch */,
+				4AD97FA9228BD1710092AE0D /* WordSearchTests */,
 			);
 		};
 /* End PBXProject section */
@@ -149,6 +205,13 @@
 				4A24A182228281E300F868FE /* LaunchScreen.storyboard in Resources */,
 				4A24A17F228281E300F868FE /* Assets.xcassets in Resources */,
 				4A24A17D228281E300F868FE /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4AD97FA8228BD1710092AE0D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,7 +235,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4AD97FA6228BD1710092AE0D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4AD97FBA228BDF860092AE0D /* GameViewControllerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4AD97FB0228BD1710092AE0D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A24A173228281E300F868FE /* WordSearch */;
+			targetProxy = 4AD97FAF228BD1710092AE0D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4A24A17B228281E300F868FE /* Main.storyboard */ = {
@@ -346,6 +425,49 @@
 			};
 			name = Release;
 		};
+		4AD97FB1228BD1710092AE0D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KC5Z2WLT8C;
+				INFOPLIST_FILE = WordSearchTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vatsan.xcode.WordSearchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WordSearch.app/WordSearch";
+			};
+			name = Debug;
+		};
+		4AD97FB2228BD1710092AE0D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KC5Z2WLT8C;
+				INFOPLIST_FILE = WordSearchTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vatsan.xcode.WordSearchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WordSearch.app/WordSearch";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -363,6 +485,15 @@
 			buildConfigurations = (
 				4A24A187228281E300F868FE /* Debug */,
 				4A24A188228281E300F868FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4AD97FB3228BD1710092AE0D /* Build configuration list for PBXNativeTarget "WordSearchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4AD97FB1228BD1710092AE0D /* Debug */,
+				4AD97FB2228BD1710092AE0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

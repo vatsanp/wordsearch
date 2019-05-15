@@ -9,14 +9,24 @@
 import UIKit
 import AVFoundation
 
+//––––––CONSTANTS–––––––
 let NUM_ROWS = 10, NUM_COLS = 10
 
-struct Bounds {
+//–––––––STRUCTS and ENUMS––––––––
+struct Bounds: Equatable {
 	var xMin: Int = 0
-	var xMax: Int = 10
+	var xMax: Int = NUM_ROWS
 	var yMin: Int = 0
-	var yMax: Int = 10
+	var yMax: Int = NUM_COLS
+	
+	static func == (lhs: Bounds, rhs: Bounds) -> Bool {
+		return 	lhs.xMin == rhs.xMin &&
+				lhs.xMax == rhs.xMax &&
+				lhs.yMin == rhs.yMin &&
+				lhs.yMax == rhs.yMax
+	}
 }
+
 
 struct Direction: Hashable {
 	let x: Int
@@ -33,17 +43,27 @@ enum Difficulty {
 	case hard
 }
 
+//Protocol to use member functions
 protocol WordCheckProtocol {
 	func checkWord(startingCell: CollectionViewCell, endingCell: CollectionViewCell, direction: CGPoint)
 }
 
+//View Controller for Game screen
 class GameViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, WordCheckProtocol {
 	
+	//–––––VARIABLES AND OUTLETS–––––
 	var wordBank: [String] = ["ObjectiveC", "Variable", "Mobile", "Kotlin", "Swift", "Java"]
 	var optionalWords: [String] = ["Shopify", "Intern", "Innovate", "Create", "Imagine",
  "Data", "User", "Cloud"]
 	var hiddenWord: String!
-	var directions: [Direction: Int]!
+	var directions: [Direction: Int] = [	Direction(1,0): 0,
+											Direction(1,1): 0,
+											Direction(0,1): 0,
+											Direction(-1,1): 0,
+											Direction(-1,0): 0,
+											Direction(-1,-1): 0,
+											Direction(0,-1): 0,
+											Direction(1,-1): 0]
 	var grid: [[Character]] = []
 	var wordsFound = 0
 	var pointsHistory: [Int] = []
@@ -52,12 +72,12 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	var seconds: Int!
 	var gameWon = false
 	
-	let timerLayer = CAShapeLayer()
+	let timerLayer = CAShapeLayer()				//Animated timer and progress layers
 	let progressLayer = CAShapeLayer()
 	let pulseTimerLayer = CAShapeLayer()
 	let pulseProgressLayer = CAShapeLayer()
 	
-	let correctSound: SystemSoundID = 1114
+	let correctSound: SystemSoundID = 1114		//Game sounds
 	let wrongSound: SystemSoundID = 1257
 	
 	var difficulty: Difficulty!
@@ -73,12 +93,13 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	@IBOutlet var progressView: UIView!
 	@IBOutlet var startButton: UIButton!
 	
+	//–––––FUNCTIONS–––––
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		let storage = UserDefaults.standard
 		
-		if timerOn {
+		if timerOn {			//Set timer
 			seconds = 120
 			timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
 			
@@ -95,19 +116,19 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 			}
 		}
 		
-		initializeLayers()
+		initializeLayers()		//Configure animated layers
 		timerLabel.layer.zPosition = 5
 		progressLabel.layer.zPosition = 5
 		
-		drawView.layer.cornerRadius = 20
+		drawView.layer.cornerRadius = 20	//Round corners of game board
 		drawView.clipsToBounds = true
 		
-		startButton.layer.cornerRadius = 10
+		startButton.layer.cornerRadius = 10	//Round corners of start button
 		startButton.clipsToBounds = true
 		
 		grid = [[Character]](repeating: [Character](repeating: "-", count: NUM_COLS), count: NUM_ROWS)
 		
-		switch difficulty! {
+		switch difficulty! {				//Use only certain directions if easy
 		case .easy:
 			directions = [	Direction(1,0): 0,
 							  Direction(0,1): 0,
@@ -124,19 +145,19 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 							  Direction(1,-1): 0]
 		}
 		
-		for _ in 0..<2 {
+		for _ in 0..<2 {					//Choose 2 random words to add to word bank
 			let word = optionalWords.randomElement()!
 			optionalWords.remove(at: optionalWords.firstIndex(of: word)!)
 			wordBank.append(word)
 		}
 		
-		hiddenWord = optionalWords.randomElement()!
+		hiddenWord = optionalWords.randomElement()!	//Choose hidden word
 		print(hiddenWord!)
 		
-		wordBank.sort { $0.count > $1.count }
+		wordBank.sort { $0.count > $1.count }		//Sort word bank on length descending
 		print(wordBank)
 		
-		for i in 0..<wordBank.count {
+		for i in 0..<wordBank.count {				//Uppercase all words
 			wordBank[i] = wordBank[i].uppercased()
 		}
 		
@@ -144,19 +165,19 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		
 		pointsLabel.text = "0"
 		
-		for word in wordBank {
+		for word in wordBank {						//Place words in grid
 			placeWord(word: word, grid: &grid)
 		}
 		
-		placeWord(word: hiddenWord, grid: &grid)
+		placeWord(word: hiddenWord, grid: &grid)	//Place hidden word
 		
-		fillGrid(grid: &grid)
+		fillGrid(grid: &grid)						//Fill grid
 		
 		self.drawView.delegate1 = self
 		self.drawView.delegate2 = gridView
 	}
 	
-	@IBAction func startGame(_ sender: Any) {
+	@IBAction func startGame(_ sender: Any) {		//Show game board and start animations and timer
 		startButton.isHidden = true
 		gridView.isHidden = false
 		drawView.isHidden = false
@@ -165,10 +186,14 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		animatePulse()
 	}
 	
-	@IBAction func backHome(_ sender: UIButton) {
+	@IBAction func backHome(_ sender: UIButton) {	//Segue to Are You Sure modal
 		performSegue(withIdentifier: "areYouSureSegue", sender: nil)
 	}
 	
+	public func getRows() -> Int { return NUM_ROWS }	//Get functions
+	public func getCols() -> Int { return NUM_COLS }
+	
+	//Collection View Functions ––––– Each one checks wether data is for game grid or word bank
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if (collectionView == gridView) { return NUM_ROWS * NUM_COLS }
 		else { return wordBank.count + 1}
@@ -178,8 +203,8 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		if (collectionView == gridView) {
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GridCell", for: indexPath) as! CollectionViewCell
 			
-			cell.x = indexPath.item/10
-			cell.y = indexPath.item%10
+			cell.x = indexPath.item/NUM_ROWS
+			cell.y = indexPath.item%NUM_ROWS
 			cell.label.text = String(grid[cell.x][cell.y])
 			
 			return cell
@@ -203,11 +228,13 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		else { return CGSize(width: 100, height: 25) }
 	}
 	
+	//Place word into grid
 	func placeWord(word: String, grid: inout [[Character]]) {
 		var direction: Direction
 		var wordPlaced = false
-		while !wordPlaced {
-			if difficulty == .easy {
+		var count = 0
+		while !wordPlaced {				//Keep trying until word is placed
+			if difficulty == .easy {	//Choose direction
 				repeat {
 					direction = directions.randomElement()!.key
 				} while (directions[direction]! >= 3)
@@ -218,7 +245,8 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 				} while (directions[direction]! >= 2)
 			}
 			
-			for _ in 0..<100 {
+			for _ in 0..<20 {			//Try to place word in this direction 20 times
+				count += 1
 				let bounds = getBounds(direction: direction, word: word)
 				
 				let xStart = Int.random(in: bounds.xMin..<bounds.xMax)
@@ -228,20 +256,20 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 				var y = yStart
 				
 				var success = true
-				for letter in word.uppercased() {
+				for letter in word.uppercased() {	//Check if word can be placed
 					print(letter)
 					if (grid[x][y] != letter && grid[x][y] != "-") {
 						success = false
 					}
 					x += direction.x; y += direction.y
 				}
-				if (success == false) { continue }
+				if (success == false) { continue }	//If can't be placed, skip rest and move on
 				wordPlaced = true
 				
 				x = xStart
 				y = yStart
 				
-				for letter in word.uppercased() {
+				for letter in word.uppercased() {	//Place word
 					grid[x][y] = letter
 					x += direction.x; y += direction.y
 				}
@@ -251,18 +279,22 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 				
 				break
 			}
-			
+			if count >= 200 {
+				wordBank.remove(at: wordBank.firstIndex(of: word)!)
+				break
+			}
 		}
-		print(directions!)
+		print(directions)
 		for row in grid {
 			print(row)
 		}
 	}
 	
+	//Get bounds of where word can start to be placed
 	func getBounds(direction: Direction, word: String) -> Bounds {
 		var bounds = Bounds()
 		
-		switch direction.x {
+		switch direction.x {	//Get x bounds
 		case 0:
 			bounds.xMin = 0; bounds.xMax = NUM_ROWS
 		case 1:
@@ -272,7 +304,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		default:
 			bounds.xMin = 0; bounds.xMax = NUM_ROWS
 		}
-		switch direction.y {
+		switch direction.y {	//Get y bounds
 		case 0:
 			bounds.yMin = 0; bounds.yMax = NUM_COLS
 		case 1:
@@ -286,10 +318,11 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		return bounds
 	}
 	
+	//Fill grid with random letters
 	func fillGrid(grid: inout [[Character]]) {
 		for i in 0..<NUM_ROWS {
 			for j in 0..<NUM_COLS {
-				if (grid[i][j] == "-") {
+				if (grid[i][j] == "-") {				//Get random letter
 					let randChar = Character(UnicodeScalar(Int.random(in: 65..<91))!)
 					grid[i][j] = randChar
 				}
@@ -297,6 +330,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		}
 	}
 	
+	//Check if word selected is correct
 	func checkWord(startingCell: CollectionViewCell, endingCell: CollectionViewCell, direction: CGPoint) {
 		var x = startingCell.x!
 		var y = startingCell.y!
@@ -309,7 +343,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		let cell = gridView.cellForItem(at: IndexPath(row: x*NUM_COLS + y, section: 0)) as! CollectionViewCell
 		cells.append(cell)
 		if direction != CGPoint(x: 0, y: 0) {
-			while (x != endingCell.x || y != endingCell.y) {
+			while (x != endingCell.x || y != endingCell.y) {	//Gather letters
 				x += Int(direction.x)
 				y += Int(direction.y)
 				currentLetter = grid[x][y]
@@ -320,35 +354,43 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		}
 		print(word)
 		
-		if wordBank.contains(word) || wordBank.contains(String(word.reversed())) {
+		if wordBank.contains(word) || wordBank.contains(String(word.reversed())) {	//Check if word is correct
 			if (wordBank.contains(String(word.reversed()))) {
 				word = String(word.reversed())
 			}
-			drawView.finishedLines.append(drawView.currentLine!)
+			drawView.finishedLines.append(drawView.currentLine!)	//Append current line
 			for cell in cells {
 				cell.isInLine = true
 			}
+			
 			print("Correct")
 			wordsFound += 1
-			if timerOn { points += 20 * seconds }
+			
+			if timerOn { points += 20 * seconds }					//Update points
 			else { points += max(200-seconds, 20) }
 			pointsLabel.text = String(points)
-			AudioServicesPlaySystemSound(correctSound)
+			
+			AudioServicesPlaySystemSound(correctSound)				//Play correct sound
+			
 			progressLabel.text = "\(wordsFound)/\(wordBank.count)"
 			animateProgressView()
+			
 			let index = wordBank.firstIndex(of: word)!
 			let cell = wordBankView.cellForItem(at: IndexPath(row: index, section: 0)) as! CollectionViewCell
 			cell.label.isEnabled = false
 		}
-		else if word == hiddenWord.uppercased() || String(word.reversed()) == hiddenWord.uppercased() {
+		else if word == hiddenWord.uppercased() || String(word.reversed()) == hiddenWord.uppercased() {			//Check if word is hidden word
 			drawView.finishedLines.append(drawView.currentLine!)
 			for cell in cells {
 				cell.isInLine = true
 			}
+			
 			print("Correct")
 			points += 5000
-			pointsLabel.text = String(points)
-			AudioServicesPlaySystemSound(correctSound)
+			pointsLabel.text = String(points)						//Bonus points
+			
+			AudioServicesPlaySystemSound(correctSound)				//Play correct sound
+			
 			let cell = wordBankView.cellForItem(at: IndexPath(row: wordBank.count, section: 0)) as! CollectionViewCell
 			cell.label.text = hiddenWord.uppercased()
 			cell.label.isEnabled = false
@@ -356,30 +398,33 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		else {
 			drawView.currentLine = nil
 			print("Wrong")
-			AudioServicesPlaySystemSound(wrongSound)
+			AudioServicesPlaySystemSound(wrongSound)				//Play wrong sound
 			gridView.resetTextColor()
 		}
 		
-		if wordsFound == wordBank.count {
+		if wordsFound == wordBank.count {							//If game is finished
 			gameWon = true
-			timer.invalidate()
+			
+			timer.invalidate()			//Stop timer
 			let pausedTime = timerLayer.convertTime(CACurrentMediaTime(), from: nil)
 			timerLayer.speed = 0.0
 			timerLayer.timeOffset = pausedTime
+			
 			gridView.isUserInteractionEnabled = false
+			
 			let hiddenCell = wordBankView.cellForItem(at: IndexPath(row: wordBank.count, section: 0)) as! CollectionViewCell
 			if hiddenCell.label.isEnabled == true {
-				hiddenCell.label.text = hiddenWord.uppercased()
+				hiddenCell.label.text = hiddenWord.uppercased()		//Reveal hidden word
 				
 			}
 			pointsHistory.append(points)
-			
+																	//Store points
 			if timerOn { UserDefaults.standard.set(pointsHistory, forKey: "storedTimerPoints") }
 			else { UserDefaults.standard.set(pointsHistory, forKey: "storedCasualPoints") }
 			
 			progressLayer.strokeColor = UIColor.green.cgColor
 			pulseProgressLayer.fillColor = UIColor.green.cgColor
-			DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {		//Segue to end screen
 				self.performSegue(withIdentifier: "gameOverSegue", sender: nil)
 			}
 		}
@@ -387,38 +432,33 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	
 	@objc func updateTimer() {
 		if timerOn {
-			if seconds < 1 {
+			if seconds < 1 {		//Turn off timer if time runs out
 				timer.invalidate()
-				gameWon = false
+				gameWon = false			//Segue to end screen
 				performSegue(withIdentifier: "gameOverSegue", sender: nil)
 			}
-			else if seconds < 60 {
+			else if seconds < 60 {	//Remove time format if below 60 seconds
 				seconds -= 1
 				timerLabel.text = String(seconds)
 			}
 			else {
-				seconds -= 1     //This will decrement(count down)the seconds.
-				timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60) //This will update the label.
+				seconds -= 1
+				timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
 			}
 		}
 		else {
-			if seconds < 60 {
+			if seconds < 60 {		//Remove time format if below 60 seconds
 				seconds += 1
 				timerLabel.text = String(seconds)
 			}
-			else if seconds % 60 == 0 {
-				seconds += 1
-				timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
-				timerLayer.removeAllAnimations()
-				animateTimerView()
-			}
-			else if seconds > 60 {
+			else if seconds >= 60 {
 				seconds += 1
 				timerLabel.text = String(format: "%i:%02i", seconds/60, seconds%60)
 			}
 		}
 	}
 	
+	//Initialize animating timer/progress layers
 	func initializeLayers() {
 		let trackLayer1 = CAShapeLayer()
 		let trackLayer2 = CAShapeLayer()
@@ -428,6 +468,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		trackLayer1.path = circularPath.cgPath
 		trackLayer2.path = circularPath.cgPath
 		
+		//Track layers for both time and progress
 		trackLayer1.strokeColor = UIColor.lightGray.cgColor
 		trackLayer2.strokeColor = UIColor.lightGray.cgColor
 		trackLayer1.fillColor = UIColor.clear.cgColor
@@ -439,6 +480,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		trackLayer1.position = CGPoint(x: timerView.frame.width/2, y: timerView.frame.height/2)
 		trackLayer2.position = CGPoint(x: progressView.frame.width/2, y: progressView.frame.height/2)
 		
+		//Time layer
 		timerLayer.path = circularPath.cgPath
 		timerLayer.strokeColor = UIColor.red.cgColor
 		timerLayer.fillColor = UIColor.white.cgColor
@@ -447,6 +489,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		timerLayer.strokeEnd = 0
 		timerLayer.position = CGPoint(x: timerView.frame.width/2, y: timerView.frame.height/2)
 		
+		//Progress Layer
 		progressLayer.path = circularPath.cgPath
 		progressLayer.strokeColor = UIColor.blue.cgColor
 		progressLayer.fillColor = UIColor.white.cgColor
@@ -455,6 +498,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		progressLayer.strokeEnd = 0
 		progressLayer.position = CGPoint(x: progressView.frame.width/2, y: progressView.frame.height/2)
 		
+		//Animating Pulse Layer for Timer
 		pulseTimerLayer.path = UIBezierPath(arcCenter: .zero, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true).cgPath
 		pulseTimerLayer.strokeColor = UIColor.clear.cgColor
 		pulseTimerLayer.fillColor = UIColor.red.cgColor
@@ -463,6 +507,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		pulseTimerLayer.lineCap = CAShapeLayerLineCap.round
 		pulseTimerLayer.position = CGPoint(x: timerView.frame.width/2, y: timerView.frame.height/2)
 		
+		//Animating Pulse Layer for Progress
 		pulseProgressLayer.path = UIBezierPath(arcCenter: .zero, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true).cgPath
 		pulseProgressLayer.strokeColor = UIColor.clear.cgColor
 		pulseProgressLayer.fillColor = UIColor.blue.cgColor
@@ -480,9 +525,10 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		progressView.layer.addSublayer(trackLayer2)
 		progressView.layer.addSublayer(progressLayer)
 		
-		animatePulse()
+		animatePulse()		//Start animating
 	}
 	
+	//Animation for Timer Layer
 	func animateTimerView() {
 		if timerOn {
 			let timerAnimation = CABasicAnimation(keyPath: "strokeEnd")
@@ -509,6 +555,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		}
 	}
 	
+	//Animation for Progress Layer
 	func animateProgressView() {
 		let progressAnimation = CABasicAnimation(keyPath: "strokeEnd")
 		
@@ -522,6 +569,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		progressLayer.add(progressAnimation, forKey: "progressAnimation")
 	}
 	
+	//Animation for pulsing for Timer/Progress Layers
 	func animatePulse() {
 		let animation = CABasicAnimation(keyPath: "transform.scale")
 		
@@ -534,6 +582,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		pulseTimerLayer.add(animation, forKey: "pulsingTimer")
 	}
 	
+	//Prepare for endgame
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination as? EndViewController != nil {
 			let destinationVC = segue.destination as! EndViewController
