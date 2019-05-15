@@ -107,6 +107,12 @@
                                     <action selector="aboutMe:" destination="ZhE-L5-w4T" eventType="touchUpInside" id="YqW-FN-Bta"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vatsan Prabhu" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6uW-Hd-j6v">
+                                <rect key="frame" x="276.5" y="64" width="117.5" height="20.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.28235294117647058" green="0.60784313725490191" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -120,10 +126,13 @@
                             <constraint firstItem="J4t-Iy-THG" firstAttribute="top" secondItem="NFG-T2-MVV" secondAttribute="top" constant="75" id="P5n-yn-kwY"/>
                             <constraint firstItem="oVl-Ik-oWd" firstAttribute="centerX" secondItem="CTw-34-h6a" secondAttribute="centerX" id="QXF-9p-EUr"/>
                             <constraint firstItem="NFG-T2-MVV" firstAttribute="bottom" secondItem="oVl-Ik-oWd" secondAttribute="bottom" constant="75" id="R1T-Or-gDv"/>
+                            <constraint firstItem="6uW-Hd-j6v" firstAttribute="top" secondItem="NFG-T2-MVV" secondAttribute="top" constant="20" id="RSb-Py-Xd8"/>
                             <constraint firstItem="lLh-E0-m4z" firstAttribute="centerY" secondItem="wzG-lx-8h3" secondAttribute="centerY" constant="100" id="Vav-zR-TXU"/>
                             <constraint firstItem="lLh-E0-m4z" firstAttribute="centerX" secondItem="wzG-lx-8h3" secondAttribute="centerX" id="b9F-S6-PUF"/>
+                            <constraint firstItem="NFG-T2-MVV" firstAttribute="trailing" secondItem="6uW-Hd-j6v" secondAttribute="trailing" constant="20" id="blA-hb-UWC"/>
                             <constraint firstItem="CTw-34-h6a" firstAttribute="centerY" secondItem="wzG-lx-8h3" secondAttribute="centerY" constant="-100" id="eb9-H3-DXF"/>
                             <constraint firstItem="J4t-Iy-THG" firstAttribute="centerX" secondItem="CTw-34-h6a" secondAttribute="centerX" id="mAR-E5-Epf"/>
+                            <constraint firstItem="6uW-Hd-j6v" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="NFG-T2-MVV" secondAttribute="leading" symbolic="YES" id="vTk-3X-1eV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="NFG-T2-MVV"/>
                         <variation key="default">
@@ -901,10 +910,10 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l2O-Cj-ohi" userLabel="Modal View">
-                                            <rect key="frame" x="20" y="359.5" width="374" height="177.5"/>
+                                            <rect key="frame" x="20" y="370.5" width="374" height="155.5"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wTO-fm-6x3">
-                                                    <rect key="frame" x="10" y="60" width="354" height="57.5"/>
+                                                    <rect key="frame" x="10" y="60" width="354" height="35.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="If you leave now your progress will not be saved. Don't give up!">
@@ -927,7 +936,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jAV-gA-7nC">
-                                                    <rect key="frame" x="187" y="127.5" width="187" height="50"/>
+                                                    <rect key="frame" x="187" y="105.5" width="187" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="stR-kc-PnS"/>
                                                     </constraints>
@@ -938,7 +947,7 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cfu-RQ-Y83">
-                                                    <rect key="frame" x="0.0" y="127.5" width="187" height="50"/>
+                                                    <rect key="frame" x="0.0" y="105.5" width="187" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="2Gt-aj-8gH"/>
                                                     </constraints>
