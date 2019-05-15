@@ -40,6 +40,9 @@ protocol WordCheckProtocol {
 class GameViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, WordCheckProtocol {
 	
 	var wordBank: [String] = ["ObjectiveC", "Variable", "Mobile", "Kotlin", "Swift", "Java"]
+	var optionalWords: [String] = ["Shopify", "Intern", "Innovate", "Create", "Imagine",
+ "Data", "User", "Cloud"]
+	var hiddenWord: String!
 	var directions: [Direction: Int]!
 	var grid: [[Character]] = []
 	var wordsFound = 0
@@ -96,6 +99,12 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		timerLabel.layer.zPosition = 5
 		progressLabel.layer.zPosition = 5
 		
+		drawView.layer.cornerRadius = 20
+		drawView.clipsToBounds = true
+		
+		startButton.layer.cornerRadius = 10
+		startButton.clipsToBounds = true
+		
 		grid = [[Character]](repeating: [Character](repeating: "-", count: NUM_COLS), count: NUM_ROWS)
 		
 		switch difficulty! {
@@ -115,6 +124,18 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 							  Direction(1,-1): 0]
 		}
 		
+		for _ in 0..<2 {
+			let word = optionalWords.randomElement()!
+			optionalWords.remove(at: optionalWords.firstIndex(of: word)!)
+			wordBank.append(word)
+		}
+		
+		hiddenWord = optionalWords.randomElement()!
+		print(hiddenWord!)
+		
+		wordBank.sort { $0.count > $1.count }
+		print(wordBank)
+		
 		for i in 0..<wordBank.count {
 			wordBank[i] = wordBank[i].uppercased()
 		}
@@ -126,6 +147,8 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		for word in wordBank {
 			placeWord(word: word, grid: &grid)
 		}
+		
+		placeWord(word: hiddenWord, grid: &grid)
 		
 		fillGrid(grid: &grid)
 		
@@ -143,11 +166,12 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 	}
 	
 	@IBAction func backHome(_ sender: UIButton) {
-		performSegue(withIdentifier: "backHomeSegue", sender: nil)
+		performSegue(withIdentifier: "areYouSureSegue", sender: nil)
 	}
+	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if (collectionView == gridView) { return NUM_ROWS * NUM_COLS }
-		else { return wordBank.count }
+		else { return wordBank.count + 1}
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -163,26 +187,38 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		else {
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordBankCell", for: indexPath) as! CollectionViewCell
 			
-			cell.label.text = wordBank[indexPath.item]
+			if (indexPath.item == wordBank.count) {
+				cell.label.text = "?????"
+			}
+			else {
+				cell.label.text = wordBank[indexPath.item]
+			}
 			print(cell.label.text!)
 			return cell
 		}
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		if (collectionView == gridView) { return CGSize(width: 35, height: 35) }
-		else { return CGSize(width: 100, height: 35) }
+		if (collectionView == gridView) { return CGSize(width: 32.5, height: 32.5) }
+		else { return CGSize(width: 100, height: 25) }
 	}
 	
 	func placeWord(word: String, grid: inout [[Character]]) {
 		var direction: Direction
 		var wordPlaced = false
 		while !wordPlaced {
-			repeat {
-				direction = directions.randomElement()!.key
-			} while (directions[direction]! >= 2)
+			if difficulty == .easy {
+				repeat {
+					direction = directions.randomElement()!.key
+				} while (directions[direction]! >= 3)
+			}
+			else {
+				repeat {
+					direction = directions.randomElement()!.key
+				} while (directions[direction]! >= 2)
+			}
 			
-			for _ in 0..<(NUM_ROWS * NUM_COLS) {
+			for _ in 0..<100 {
 				let bounds = getBounds(direction: direction, word: word)
 				
 				let xStart = Int.random(in: bounds.xMin..<bounds.xMax)
@@ -215,8 +251,12 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 				
 				break
 			}
+			
 		}
 		print(directions!)
+		for row in grid {
+			print(row)
+		}
 	}
 	
 	func getBounds(direction: Direction, word: String) -> Bounds {
@@ -263,14 +303,19 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		
 		var currentLetter = grid[x][y]
 		var word = ""
+		var cells: [CollectionViewCell] = []
 		
 		word.append(currentLetter)
+		let cell = gridView.cellForItem(at: IndexPath(row: x*NUM_COLS + y, section: 0)) as! CollectionViewCell
+		cells.append(cell)
 		if direction != CGPoint(x: 0, y: 0) {
 			while (x != endingCell.x || y != endingCell.y) {
 				x += Int(direction.x)
 				y += Int(direction.y)
 				currentLetter = grid[x][y]
 				word.append(currentLetter)
+				let cell = gridView.cellForItem(at: IndexPath(row: x*NUM_COLS + y, section: 0)) as! CollectionViewCell
+				cells.append(cell)
 			}
 		}
 		print(word)
@@ -280,6 +325,9 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 				word = String(word.reversed())
 			}
 			drawView.finishedLines.append(drawView.currentLine!)
+			for cell in cells {
+				cell.isInLine = true
+			}
 			print("Correct")
 			wordsFound += 1
 			if timerOn { points += 20 * seconds }
@@ -292,10 +340,24 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 			let cell = wordBankView.cellForItem(at: IndexPath(row: index, section: 0)) as! CollectionViewCell
 			cell.label.isEnabled = false
 		}
+		else if word == hiddenWord.uppercased() || String(word.reversed()) == hiddenWord.uppercased() {
+			drawView.finishedLines.append(drawView.currentLine!)
+			for cell in cells {
+				cell.isInLine = true
+			}
+			print("Correct")
+			points += 5000
+			pointsLabel.text = String(points)
+			AudioServicesPlaySystemSound(correctSound)
+			let cell = wordBankView.cellForItem(at: IndexPath(row: wordBank.count, section: 0)) as! CollectionViewCell
+			cell.label.text = hiddenWord.uppercased()
+			cell.label.isEnabled = false
+		}
 		else {
 			drawView.currentLine = nil
 			print("Wrong")
 			AudioServicesPlaySystemSound(wrongSound)
+			gridView.resetTextColor()
 		}
 		
 		if wordsFound == wordBank.count {
@@ -304,6 +366,12 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 			let pausedTime = timerLayer.convertTime(CACurrentMediaTime(), from: nil)
 			timerLayer.speed = 0.0
 			timerLayer.timeOffset = pausedTime
+			gridView.isUserInteractionEnabled = false
+			let hiddenCell = wordBankView.cellForItem(at: IndexPath(row: wordBank.count, section: 0)) as! CollectionViewCell
+			if hiddenCell.label.isEnabled == true {
+				hiddenCell.label.text = hiddenWord.uppercased()
+				
+			}
 			pointsHistory.append(points)
 			
 			if timerOn { UserDefaults.standard.set(pointsHistory, forKey: "storedTimerPoints") }
@@ -390,7 +458,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		pulseTimerLayer.path = UIBezierPath(arcCenter: .zero, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true).cgPath
 		pulseTimerLayer.strokeColor = UIColor.clear.cgColor
 		pulseTimerLayer.fillColor = UIColor.red.cgColor
-		pulseTimerLayer.opacity = 0.2
+		pulseTimerLayer.opacity = 0.5
 		pulseTimerLayer.lineWidth = 10
 		pulseTimerLayer.lineCap = CAShapeLayerLineCap.round
 		pulseTimerLayer.position = CGPoint(x: timerView.frame.width/2, y: timerView.frame.height/2)
@@ -398,7 +466,7 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 		pulseProgressLayer.path = UIBezierPath(arcCenter: .zero, radius: 50, startAngle: -CGFloat.pi/2, endAngle: 1.5 * CGFloat.pi, clockwise: true).cgPath
 		pulseProgressLayer.strokeColor = UIColor.clear.cgColor
 		pulseProgressLayer.fillColor = UIColor.blue.cgColor
-		pulseProgressLayer.opacity = 0.2
+		pulseProgressLayer.opacity = 0.5
 		pulseProgressLayer.lineWidth = 10
 		pulseProgressLayer.lineCap = CAShapeLayerLineCap.round
 		pulseProgressLayer.position = CGPoint(x: progressView.frame.width/2, y: progressView.frame.height/2)
@@ -428,7 +496,6 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 			timerLayer.add(timerAnimation, forKey: "timerAnimation")
 		}
 		else {
-			print("TEST1")
 			let timerAnimation = CABasicAnimation(keyPath: "strokeEnd")
 		
 			timerAnimation.toValue = 1
@@ -473,11 +540,8 @@ class GameViewController: UIViewController, UICollectionViewDataSource, UICollec
 			if (segue.identifier == "gameOverSegue") {
 				destinationVC.gameWon = gameWon
 				destinationVC.pointsHistory = pointsHistory
+				destinationVC.points = points
 			}
 		}
-	}
-	
-	func usePortraitConstraints() {
-		
 	}
 }

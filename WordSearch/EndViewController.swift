@@ -20,17 +20,20 @@ class EndViewController: UIViewController, UITableViewDataSource, UITableViewDel
 	let failSound: SystemSoundID = 1006
 
 	@IBOutlet var endMessageLabel: UILabel!
+	@IBOutlet var finalScoreLabel: UILabel!
 	@IBOutlet var restartButton: UIButton!
 	@IBOutlet var leaderboardTableView: UITableView!
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
 		
+		restartButton.clipsToBounds = true
+		restartButton.layer.cornerRadius = 10
+		
 		pointsHistory.sort()
 		pointsHistory.reverse()
 		
 		leaderboardTableView.reloadData()
-		print(leaderboardTableView.numberOfRows(inSection: 0))
 
 		if gameWon {
 			endMessageLabel.text = "Congratulations!"
@@ -40,6 +43,7 @@ class EndViewController: UIViewController, UITableViewDataSource, UITableViewDel
 			endMessageLabel.text = "So Close! Try Again!"
 			AudioServicesPlaySystemSound(failSound)
 		}
+		finalScoreLabel.text = "You scored \(points!) points!"
     }
 	
 	@IBAction func restartGame(_ sender: UIButton) {
@@ -53,7 +57,7 @@ class EndViewController: UIViewController, UITableViewDataSource, UITableViewDel
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = leaderboardTableView.dequeueReusableCell(withIdentifier: "leaderboardCell", for: indexPath) as! TableViewCell
 
-		cell.scoreLabel.text = String(pointsHistory[indexPath.row])
+		cell.scoreLabel.text = "\(indexPath.row + 1) )    \(pointsHistory[indexPath.row])"
 
 		return cell
 	}

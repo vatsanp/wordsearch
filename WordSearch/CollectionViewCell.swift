@@ -12,6 +12,7 @@ class CollectionViewCell: UICollectionViewCell {
 	
 	var x: Int!
 	var y: Int!
+	var isInLine = false
 	
 	@IBOutlet var label: UILabel!
 }

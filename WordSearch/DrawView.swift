@@ -11,19 +11,24 @@ import Foundation
 import CoreGraphics
 import AVFoundation
 
+
 struct Line {
 	var begin = CGPoint.zero
 	var end = CGPoint.zero
+	var colour = UIColor.blue
 }
 
 class DrawView: UIView {
 
 	var delegate1: WordCheckProtocol?
-	var delegate2: GetDetailsProtocol?
+	var delegate2: CollectionViewProtocol?
 	
 	var currentLine: Line?
-	var finishedLines = [Line]();
+	var finishedLines = [Line]()
 	var currentDirection: CGPoint!
+	
+	let strokeColours: [UIColor] = [UIColor.blue, UIColor.red, UIColor.purple, UIColor.orange, UIColor.cyan, UIColor.green, UIColor.black]
+	var currentColour = UIColor.blue
 	
 	let generator = UIImpactFeedbackGenerator(style: .light)
 	let tapSound: SystemSoundID = 1104
@@ -31,8 +36,10 @@ class DrawView: UIView {
 	func strokeLine(line: Line){
 		//Use BezierPath to draw lines
 		let path = UIBezierPath();
-		path.lineWidth = 10;
+		path.lineWidth = 20;
 		path.lineCapStyle = CGLineCap.round;
+		
+		line.colour.setStroke()
 		
 		path.move(to: line.begin);
 		path.addLine(to: line.end);
@@ -40,12 +47,10 @@ class DrawView: UIView {
 	}
 	
 	override func draw(_ rect: CGRect) {
-		UIColor.lightGray.setStroke()
-		
 		for line in finishedLines{
+			strokeColours.randomElement()!.setStroke()
 			strokeLine(line: line);
 		}
-		
 		//draw current line if it exists
 		if let line = currentLine {
 			strokeLine(line: line);
@@ -58,6 +63,7 @@ class DrawView: UIView {
 		let location = touch.location(in: self); //get location in view co-ordinate
 		
 		generator.prepare()
+		currentColour = strokeColours.randomElement()!
 		
 		let cell = self.delegate2?.getCellAtPoint(point: location)
 		let backUpCell = self.delegate2?.getCellAtPoint(point: CGPoint(x: location.x-5, y: location.y-5))
@@ -67,7 +73,7 @@ class DrawView: UIView {
 		generator.impactOccurred()
 		AudioServicesPlaySystemSound(tapSound)
 		
-		currentLine = Line(begin: point, end: point);
+		currentLine = Line(begin: point, end: point, colour: currentColour);
 		setNeedsDisplay(); //this view needs to be updated
 	}
 	
@@ -95,6 +101,7 @@ class DrawView: UIView {
 				
 				currentLine?.end = point
 				currentDirection = direction
+				self.delegate2?.updateTextColor(point1: currentLine!.begin, point2: currentLine!.end)
 			}
 		}
 		setNeedsDisplay(); //this view needs to be updated
@@ -116,6 +123,7 @@ class DrawView: UIView {
 				
 				currentLine?.end = point
 				currentDirection = direction
+				self.delegate2?.updateTextColor(point1: currentLine!.begin, point2: currentLine!.end)
 			}
 		}
 		let start = self.delegate2?.getCellAtPoint(point: currentLine!.begin)!
