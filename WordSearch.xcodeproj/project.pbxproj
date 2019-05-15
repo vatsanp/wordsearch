@@ -18,9 +18,9 @@
 		4A3044EE228511E1001C2DB0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3044ED228511E1001C2DB0 /* HomeViewController.swift */; };
 		4A4D72C1228BBCAE00E46BC2 /* BackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4D72C0228BBCAE00E46BC2 /* BackViewController.swift */; };
 		4A4D72C5228BBE6F00E46BC2 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4D72C4228BBE6F00E46BC2 /* ModalViewController.swift */; };
+		4A815D91228C0147004DCD66 /* GameViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A815D90228C0147004DCD66 /* GameViewControllerTests.swift */; };
 		4AA3F9BC22851C690008F2BA /* EndViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA3F9BB22851C690008F2BA /* EndViewController.swift */; };
 		4AA3F9DC2287D9980008F2BA /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA3F9DB2287D9980008F2BA /* TableViewCell.swift */; };
-		4AD97FBA228BDF860092AE0D /* GameViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD97FB9228BDF860092AE0D /* GameViewControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,11 +47,11 @@
 		4A3044ED228511E1001C2DB0 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		4A4D72C0228BBCAE00E46BC2 /* BackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackViewController.swift; sourceTree = "<group>"; };
 		4A4D72C4228BBE6F00E46BC2 /* ModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
+		4A815D90228C0147004DCD66 /* GameViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewControllerTests.swift; sourceTree = "<group>"; };
 		4AA3F9BB22851C690008F2BA /* EndViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndViewController.swift; sourceTree = "<group>"; };
 		4AA3F9DB2287D9980008F2BA /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		4AD97FAA228BD1710092AE0D /* WordSearchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WordSearchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AD97FAE228BD1710092AE0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4AD97FB9228BDF860092AE0D /* GameViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewControllerTests.swift; path = ../../../../../../.Trash/GameViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,7 +114,7 @@
 		4AD97FAB228BD1710092AE0D /* WordSearchTests */ = {
 			isa = PBXGroup;
 			children = (
-				4AD97FB9228BDF860092AE0D /* GameViewControllerTests.swift */,
+				4A815D90228C0147004DCD66 /* GameViewControllerTests.swift */,
 				4AD97FAE228BD1710092AE0D /* Info.plist */,
 			);
 			path = WordSearchTests;
@@ -239,7 +239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4AD97FBA228BDF860092AE0D /* GameViewControllerTests.swift in Sources */,
+				4A815D91228C0147004DCD66 /* GameViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
